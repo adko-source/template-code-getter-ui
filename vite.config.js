@@ -6,6 +6,6 @@ import { svelte } from '@sveltejs/vite-plugin-svelte';
 export default defineConfig({
   plugins: [svelte()],
   build: {
-    outDir: 'public', // Tell Vite to output to the 'public' directory
+    outDir: 'dist', // Tell Vite to output to the 'dist' directory
   }
 });
