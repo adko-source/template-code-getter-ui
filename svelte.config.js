@@ -6,6 +6,7 @@ const config = {
   kit: {
     adapter: adapter()
   },
+  target: '#svelte',  // This tells SvelteKit where to mount the app
   preprocess: vitePreprocess()
 };
 export default config;
