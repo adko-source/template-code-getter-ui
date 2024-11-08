@@ -38,7 +38,7 @@ export default {
         poppins: ['Poppins', 'sans-serif'],
       },
       backgroundImage: {
-        'dashboard-bg': "url('$lib/images/wallhaven-d6j633.jpg')",
+        'dashboard-bg': "url('$lib/images/wallhaven-4xm13n.jpg')",
         'footer-texture': "url('/img/footer-texture.png')",
       }
     }
