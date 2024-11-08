@@ -1,4 +1,4 @@
-import { API_BASE_URL } from '$lib/apiConfig';
+const API_BASE_URL = 'https://template-code-getter-backend-82670bfc914e.herokuapp.com/';
 
 export async function attachDocument(formData: FormData) {
   
