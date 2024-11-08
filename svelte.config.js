@@ -1,12 +1,8 @@
-import adapter from '@sveltejs/adapter-auto';
+import adapter from '@sveltejs/adapter-node';
 
-import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
-/** @type {import('@sveltejs/kit').Config} */
-const config = {
+export default {
   kit: {
-    adapter: adapter()
-  },
-  target: '#svelte',  // This tells SvelteKit where to mount the app
-  preprocess: vitePreprocess()
+    adapter: adapter(),
+    // Other configurations here
+  }
 };
-export default config;
