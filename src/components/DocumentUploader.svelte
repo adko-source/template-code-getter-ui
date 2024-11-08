@@ -16,7 +16,7 @@
           alert('All template codes copied to clipboard!');
         })
         .catch(err => {
-          console.error('Failed to copy text: ', err);
+          console.error('Failed to copy texts: ', err);
         });
     };
 
@@ -69,7 +69,7 @@
   </script>
   
  <!-- Full-screen centered container with gradient background -->
-<div class="flex items-center justify-center {templateCodesList.length == 0 ? 'min-h-screen bg-dashboard-bg bg-middle bg-cover' : 'h-1/4 bg-gradient-to-br from-blue-200 via-purple-200 to-pink-200'} ">
+ <div class={templateCodesList.length == 0 ? "flex items-center justify-center min-h-screen bg-dashboard-bg bg-middle bg-cover" : "flex items-center justify-center h-1/4 bg-gradient-to-br from-blue-200 via-purple-200 to-pink-200"}>
   
   <!-- File Upload UI -->
   <div class="flex flex-col items-center justify-center bg-white p-6 rounded-md shadow-lg w-full max-w-sm">
