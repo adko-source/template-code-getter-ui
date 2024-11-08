@@ -9,5 +9,4 @@
 	<meta name="description" content="Template Code Generator" />
 </svelte:head>
   
- 
 <DocumentUploader />

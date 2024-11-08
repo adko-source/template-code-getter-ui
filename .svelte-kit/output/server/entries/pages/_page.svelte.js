@@ -23,7 +23,9 @@ function _page($$payload) {
     $$payload2.title = `<title>Template Code Generator</title>`;
     $$payload2.out += `<meta name="description" content="Template Code Generator">`;
   });
+  $$payload.out += `<h1>WOW</h1> `;
   DocumentUploader($$payload);
+  $$payload.out += `<!---->`;
 }
 export {
   _page as default

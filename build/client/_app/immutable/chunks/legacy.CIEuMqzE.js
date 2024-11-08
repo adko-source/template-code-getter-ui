@@ -1,0 +1,1 @@
+import{q as a}from"./runtime.DCPRCs3i.js";a();
