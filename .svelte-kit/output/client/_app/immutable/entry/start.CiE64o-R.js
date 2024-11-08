@@ -1,0 +1,1 @@
+import{a as t}from"../chunks/entry.DHHFnwdy.js";export{t as start};
