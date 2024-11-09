@@ -1,35 +1,45 @@
 <script lang="ts">
   
   import { attachDocument } from '$lib/api.ts';
+  import CopyModal from './CopyModal.svelte';
+
+  let showModal = false;
+  let modalMessage = '';
   
   
 
-    let uploadedFiles: File[] = [];
-    let templateCodesList: string[] = [];
-    let errorMessage: string;
+  let uploadedFiles: File[] = [];
+  let templateCodesList: string[] = [];
+  let errorMessage: string;
 
-     // Function to copy all items to the clipboard
-    function copyAllToClipboard() {
-      const textToCopy = templateCodesList.join('\n');
-      navigator.clipboard.writeText(textToCopy)
-        .then(() => {
-          alert('All template codes copied to clipboard!');
-        })
-        .catch(err => {
+    // Function to copy all items to the clipboard
+  function copyAllToClipboard() {
+    const textToCopy = templateCodesList.join('\n');
+    navigator.clipboard.writeText(textToCopy)
+      .then(() => {
+        modalMessage = 'Template codes copied to your clipboard';
+        showModal = true;
+      })
+      .catch(err => {
           console.error('Failed to copy texts: ', err);
         });
-    };
+  };
 
-    // Function to copy a single item to the clipboard
-    function copyToClipboard(item:string) {
-      navigator.clipboard.writeText(item)
-        .then(() => {
-          alert(`Copied: ${item}`);
-        })
-        .catch(err => {
-          console.error('Failed to copy text: ', err);
-        });
-    };
+  
+  function copyToClipboard(item: string) {
+  navigator.clipboard.writeText(item)
+    .then(() => {
+      modalMessage = 'Template code copied to your clipboard';
+      showModal = true;
+    })
+    .catch(err => {
+      console.error('Failed to copy text: ', err);
+    });
+  };
+
+  function closeModal() {
+    showModal = false;
+  };
   
     async function handleFileChange(event: Event) {
       
@@ -47,7 +57,7 @@
           if(file.type !== 'text/xml')
           {
             console.log('Wrong file type uploaded');
-            errorMessage = "The file type should be .xml";
+            errorMessage = "The file type should be .xml.";
             return;
           }
           else
@@ -56,8 +66,13 @@
           }
 
           formData.append("file", file, file.name);
-          const result = await attachDocument(formData);
-          templateCodesList = result.list;
+          const response = await attachDocument(formData);
+          if(response.result.error)
+          {
+            errorMessage = "Clinical Form isn't valid. Please try again."
+          };
+          console.log(response)
+          templateCodesList = response.result.templateCodesList;
           console.log(templateCodesList);
           
         });
@@ -101,7 +116,7 @@
         on:change={handleFileChange}
       />
     </label>
-    <span class="{errorMessage ? 'block' : 'hidden'} text-sm text-red-500 mt-2">The file type should be .xml</span>
+    <span class="{errorMessage ? 'block' : 'hidden'} text-sm text-red-500 mt-2">{errorMessage}</span>
   </div>
 
 </div>
@@ -114,7 +129,7 @@
     <!-- Button to copy all items to clipboard -->
     <button 
       on:click={copyAllToClipboard} 
-      class="w-full px-4 py-2 text-sm font-semibold text-white bg-green-500 rounded-md hover:bg-green-600 focus:outline-none"
+      class="w-full px-4 py-2 mb-2 text-sm font-semibold text-white bg-green-500 rounded-md hover:bg-green-600 focus:outline-none"
     >
       Copy All
     </button>
@@ -125,8 +140,7 @@
           <span class="text-sm font-mono">{item}</span>
           <button 
             on:click={() => copyToClipboard(item)} 
-            class="px-2 py-1 text-sm text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none"
-          >
+            class="px-2 py-1 text-sm text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none">          
             Copy
           </button>
         </li>
@@ -136,4 +150,6 @@
     
   </div>
 {/if}
+
+<CopyModal message={modalMessage} isOpen={showModal} onClose={closeModal} />
  
