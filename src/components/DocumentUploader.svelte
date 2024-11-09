@@ -9,8 +9,10 @@
   
 
   let uploadedFiles: File[] = [];
+  let clinicalFormName: string = '';
   let templateCodesList: string[] = [];
   let errorMessage: string;
+  
 
     // Function to copy all items to the clipboard
   function copyAllToClipboard() {
@@ -73,6 +75,8 @@
           };
           console.log(response)
           templateCodesList = response.result.templateCodesList;
+          clinicalFormName = response.fileName.replace('.xml', '');
+          console.log(clinicalFormName)
           console.log(templateCodesList);
           
         });
@@ -125,7 +129,12 @@
 
   {#if templateCodesList.length > 0}
   <div class="p-4 bg-gray-100 border border-gray-300 rounded-md">
-    <h2 class="text-lg font-semibold mb-4">Template Codes</h2>
+    <h2 class="text-lg font-semibold mb-4">
+      Template Codes for
+      <span class="text-cyan-600">
+        {clinicalFormName}
+      </span>
+    </h2>
     <!-- Button to copy all items to clipboard -->
     <button 
       on:click={copyAllToClipboard} 
