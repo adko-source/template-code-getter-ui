@@ -109,7 +109,7 @@
             clip-rule="evenodd"
           />
         </svg>
-        <span class="text-sm text-gray-500">Upload file</span>
+        <span class="text-sm text-gray-500">Upload Clinical Form</span>
         
       </div>
       
