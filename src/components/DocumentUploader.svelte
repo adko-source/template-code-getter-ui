@@ -2,12 +2,13 @@
   
   import { attachDocument } from '$lib/api.ts';
   import CopyModal from './CopyModal.svelte';
+  import Loading from "./Loading.svelte";
+  
+  
 
   let showModal = false;
   let modalMessage = '';
-  
-  
-
+  let isLoading = false;
   let uploadedFiles: File[] = [];
   let clinicalFormName: string = '';
   let templateCodesList: string[] = [];
@@ -43,55 +44,60 @@
     showModal = false;
   };
   
-    async function handleFileChange(event: Event) {
+  async function handleFileChange(event: Event) {
+    isLoading = true;
+    
+    const target = event.target as HTMLInputElement;
+
+    if (target.files) {
       
-      const target = event.target as HTMLInputElement;
+      uploadedFiles = Array.from(target.files);
+      console.log("Files selected:", uploadedFiles);
 
-      if (target.files) {
-        uploadedFiles = Array.from(target.files);
-        console.log("Files selected:", uploadedFiles);
+      uploadedFiles.forEach(async (file) => {
+        const formData = new FormData();
 
-        uploadedFiles.forEach(async (file) => {
-          const formData = new FormData();
+        console.log(file.type);
 
-          console.log(file.type);
+        if(file.type !== 'text/xml')
+        {
+          console.log('Wrong file type uploaded');
+          errorMessage = "The file type should be .xml.";
+          isLoading = false;
+          return;
+        }
+        else
+        {
+          errorMessage = "";
+        }
 
-          if(file.type !== 'text/xml')
-          {
-            console.log('Wrong file type uploaded');
-            errorMessage = "The file type should be .xml.";
-            return;
-          }
-          else
-          {
-            errorMessage = "";
-          }
-
-          formData.append("file", file, file.name);
-          const response = await attachDocument(formData);
-          if(response.result.error)
-          {
-            errorMessage = "Clinical Form isn't valid. Please try again."
-          };
-          console.log(response)
-          templateCodesList = response.result.templateCodesList;
-          clinicalFormName = response.fileName.replace('.xml', '');
-          console.log(clinicalFormName)
-          console.log(templateCodesList);
-          
-        });
+        formData.append("file", file, file.name);
+        const response = await attachDocument(formData);
+        if(response.result.error)
+        {
+          errorMessage = "Clinical Form isn't valid. Please try again.";
+          isLoading = false;
+        };
+        console.log(response)
+        templateCodesList = response.result.templateCodesList;
+        clinicalFormName = response.fileName.replace('.xml', '');
+        console.log(clinicalFormName)
+        console.log(templateCodesList);
+        
+      });
       };
+
+      isLoading = false;
 };
 
-  
-    
+
   </script>
-  
+
  <!-- Full-screen centered container with gradient background -->
- <div class={templateCodesList.length == 0 ? "flex items-center justify-center min-h-screen bg-dashboard-bg bg-middle bg-cover" : "flex items-center justify-center h-1/4 bg-gradient-to-br from-blue-200 via-purple-200 to-pink-200"}>
+ <div class={templateCodesList.length == 0 ? "flex items-center justify-center min-h-screen bg-dashboard-bg bg-cover bg-center" : "flex items-center justify-center h-1/4 bg-gradient-to-br from-blue-200 via-purple-200 to-pink-200"}>
   
   <!-- File Upload UI -->
-  <div class="flex flex-col items-center justify-center bg-white p-6 rounded-md shadow-lg w-full max-w-sm">
+  <div class="flex flex-col items-center justify-center bg-white bg-opacity-90 {isLoading ? 'hidden' : ''} p-6 rounded-md shadow-lg w-full max-w-sm">
     <label
       for="file-upload"
       class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-blue-400 transition-colors"
@@ -117,11 +123,19 @@
         id="file-upload"
         type="file"
         class="hidden"
+        disabled={isLoading}
         on:change={handleFileChange}
       />
     </label>
     <span class="{errorMessage ? 'block' : 'hidden'} text-sm text-red-500 mt-2">{errorMessage}</span>
+
+   
+
   </div>
+  
+  {#if isLoading}
+  <Loading />
+{/if}
 
 </div>
 
@@ -138,7 +152,7 @@
     <!-- Button to copy all items to clipboard -->
     <button 
       on:click={copyAllToClipboard} 
-      class="w-full px-4 py-2 mb-2 text-sm font-semibold text-white bg-green-500 rounded-md hover:bg-green-600 focus:outline-none"
+      class="w-full px-4 py-2 mb-2 text-sm font-semibold text-white bg-gradient-to-r from-pink-400 to-orange-500 text-white font-bold py-2 px-4 rounded-lg hover:from-pink-700 hover:to-orange-600 focus:outline-none focus:ring-2 focus:ring-blue-300"
     >
       Copy All
     </button>
