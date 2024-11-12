@@ -79,6 +79,7 @@
           isLoading = false;
         };
         console.log(response)
+        isLoading = false;
         templateCodesList = response.result.templateCodesList;
         clinicalFormName = response.fileName.replace('.xml', '');
         console.log(clinicalFormName)
@@ -87,7 +88,7 @@
       });
       };
 
-      isLoading = false;
+      
 };
 
 
@@ -123,7 +124,6 @@
         id="file-upload"
         type="file"
         class="hidden"
-        disabled={isLoading}
         on:change={handleFileChange}
       />
     </label>
@@ -134,8 +134,8 @@
   </div>
   
   {#if isLoading}
-  <Loading />
-{/if}
+    <Loading />
+  {/if}
 
 </div>
 
